@@ -1,0 +1,96 @@
+{% extends "base.html" %}
+
+{% block title %}{{ target_name }} Classification{% endblock %}
+
+{% block content %}
+<div class="mb-4">
+    <h1 class="display-5 fw-bold"><i class="fas fa-brain"></i> {{ target_name }} Classification</h1>
+    <p class="lead">Classifier performance analysis and metrics</p>
+</div>
+
+<div class="card mb-4">
+    <div class="card-body">
+        <div class="btn-group" role="group">
+            <a href="{{ url_for('classification', target=target, classifier='PAC') }}" 
+               class="btn {% if classifier == 'PAC' %}btn-primary{% else %}btn-outline-secondary{% endif %}">
+                PAC
+            </a>
+            <a href="{{ url_for('classification', target=target, classifier='NBC') }}" 
+               class="btn {% if classifier == 'NBC' %}btn-primary{% else %}btn-outline-secondary{% endif %}">
+                NBC
+            </a>
+            <a href="{{ url_for('classification', target=target, classifier='KNN') }}" 
+               class="btn {% if classifier == 'KNN' %}btn-primary{% else %}btn-outline-secondary{% endif %}">
+                KNN
+            </a>
+            <a href="{{ url_for('classification', target=target, classifier='CRN-GRIM') }}" 
+               class="btn {% if classifier == 'CRN-GRIM' %}btn-primary{% else %}btn-outline-secondary{% endif %}">
+                CRN-GRIM
+            </a>
+        </div>
+    </div>
+</div>
+
+<div class="row g-4 mb-4">
+    <div class="col-md-3">
+        <div class="metric-card">
+            <div class="metric-value">{{ "%.4f"|format(results.metrics.accuracy) }}</div>
+            <div class="metric-label"><i class="fas fa-bullseye"></i> Accuracy</div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="metric-card">
+            <div class="metric-value">{{ "%.4f"|format(results.metrics.precision) }}</div>
+            <div class="metric-label"><i class="fas fa-crosshairs"></i> Precision</div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="metric-card">
+            <div class="metric-value">{{ "%.4f"|format(results.metrics.recall) }}</div>
+            <div class="metric-label"><i class="fas fa-search"></i> Recall</div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="metric-card">
+            <div class="metric-value">{{ "%.4f"|format(results.metrics.f1_score) }}</div>
+            <div class="metric-label"><i class="fas fa-chart-line"></i> F1-Score</div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-4">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="fas fa-th"></i> Confusion Matrix</h5>
+            </div>
+            <div class="card-body">
+                <img src="data:image/png;base64,{{ results.cm_plot }}" class="img-fluid" alt="Confusion Matrix">
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="fas fa-chart-area"></i> ROC AUC Curve</h5>
+            </div>
+            <div class="card-body">
+                <img src="data:image/png;base64,{{ results.roc_plot }}" class="img-fluid" alt="ROC Curve">
+                <div class="text-center mt-2">
+                    <strong>AUC Score: {{ "%.4f"|format(results.metrics.auc) }}</strong>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card mt-4">
+    <div class="card-header">
+        <h5 class="mb-0"><i class="fas fa-file-alt"></i> Classification Report</h5>
+    </div>
+    <div class="card-body">
+        <pre style="background-color: #f8f9fa; padding: 15px; border-radius: 8px; overflow-x: auto;">{{ results.metrics.classification_report }}</pre>
+    </div>
+</div>
+{% endblock %}

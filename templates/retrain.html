@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+
+{% block title %}Retrain Models{% endblock %}
+
+{% block content %}
+<div class="mb-4">
+    <h1 class="display-5 fw-bold"><i class="fas fa-cogs"></i> Retrain Models</h1>
+    <p class="lead">Retrain classifiers with custom hyperparameters</p>
+</div>
+
+<div class="card">
+    <div class="card-header">
+        <h5 class="mb-0"><i class="fas fa-sliders-h"></i> Training Configuration</h5>
+    </div>
+    <div class="card-body">
+        <form method="POST">
+            <div class="mb-3">
+                <label for="target" class="form-label">Target Variable</label>
+                <select class="form-control" id="target" name="target" required>
+                    <option value="Job_Priority">Job Priority</option>
+                    <option value="Scheduler_Type">Scheduler Type</option>
+                    <option value="Resource_Allocation_Type">Resource Allocation Type</option>
+                </select>
+            </div>
+            
+            <div class="mb-3">
+                <label for="epochs" class="form-label">Epochs (for CRN-GRIM)</label>
+                <input type="number" class="form-control" id="epochs" name="epochs" value="20" min="1" max="100">
+                <small class="form-text text-muted">Number of training epochs for the neural network (default: 20)</small>
+            </div>
+            
+            <div class="mb-3">
+                <label for="batch_size" class="form-label">Batch Size (for CRN-GRIM)</label>
+                <input type="number" class="form-control" id="batch_size" name="batch_size" value="32" min="1" max="256">
+                <small class="form-text text-muted">Training batch size (default: 32)</small>
+            </div>
+            
+            <div class="alert alert-warning">
+                <i class="fas fa-exclamation-triangle"></i> <strong>Note:</strong> Retraining will overwrite existing models. The process may take a few minutes.
+            </div>
+            
+            <button type="submit" class="btn btn-primary btn-lg">
+                <i class="fas fa-play"></i> Start Retraining
+            </button>
+        </form>
+    </div>
+</div>
+
+<div class="card mt-4">
+    <div class="card-header">
+        <h5 class="mb-0"><i class="fas fa-info-circle"></i> Retraining Information</h5>
+    </div>
+    <div class="card-body">
+        <h6>What happens during retraining?</h6>
+        <ul>
+            <li><strong>PAC</strong> - Passive Aggressive Classifier (fixed parameters)</li>
+            <li><strong>NBC</strong> - Naive Bayes Classifier (no hyperparameters)</li>
+            <li><strong>KNN</strong> - K-Nearest Neighbors (k=5)</li>
+            <li><strong>CRN-GRIM</strong> - Uses your custom epochs and batch size settings</li>
+        </ul>
+        <p class="mb-0">After retraining, performance metrics are saved and can be viewed on the <a href="{{ url_for('model_performance') }}">Model Performance</a> page.</p>
+    </div>
+</div>
+{% endblock %}

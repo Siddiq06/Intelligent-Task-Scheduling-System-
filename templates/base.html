@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Cloud Workload Scheduler{% endblock %}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg-yellow: #FFFACD;
+            --sidebar-yellow: #FFE4B5;
+            --accent-gold: #FFD700;
+            --accent-orange: #FFA500;
+            --text-black: #1a1a1a;
+        }
+        
+        body {
+            background-color: var(--bg-yellow);
+            color: var(--text-black);
+            font-family: 'Inter', 'Segoe UI', sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 240px;
+            height: 100vh;
+            background-color: var(--sidebar-yellow);
+            padding: 20px;
+            box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+            overflow-y: auto;
+        }
+        
+        .sidebar-header {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid var(--accent-gold);
+        }
+        
+        .nav-link {
+            display: block;
+            padding: 12px 15px;
+            margin-bottom: 5px;
+            border-radius: 8px;
+            color: var(--text-black);
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+        
+        .nav-link:hover, .nav-link.active {
+            background-color: var(--accent-gold);
+            color: var(--text-black);
+            font-weight: 600;
+        }
+        
+        .nav-link i {
+            margin-right: 10px;
+            width: 20px;
+        }
+        
+        .main-content {
+            margin-left: 240px;
+            padding: 30px;
+            min-height: 100vh;
+        }
+        
+        .card {
+            background-color: #FFFEF7;
+            border: 1px solid #f0e68c;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            margin-bottom: 25px;
+        }
+        
+        .card-header {
+            background-color: var(--sidebar-yellow);
+            font-weight: 600;
+            font-size: 1.1rem;
+            border-bottom: 2px solid var(--accent-gold);
+        }
+        
+        .btn-primary {
+            background-color: var(--accent-orange);
+            border: none;
+            color: var(--text-black);
+            font-weight: 600;
+        }
+        
+        .btn-primary:hover {
+            background-color: var(--accent-gold);
+            color: var(--text-black);
+        }
+        
+        .metric-card {
+            background: linear-gradient(135deg, #FFFEF7 0%, #FFF9E6 100%);
+            border-left: 4px solid var(--accent-orange);
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .metric-value {
+            font-size: 2rem;
+            font-weight: 700;
+            font-family: 'Courier New', monospace;
+            color: var(--accent-orange);
+        }
+        
+        .metric-label {
+            font-size: 0.9rem;
+            color: #666;
+            margin-top: 5px;
+        }
+        
+        .alert {
+            border-radius: 8px;
+            border: none;
+        }
+        
+        .alert-success {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        
+        .alert-error, .alert-danger {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+        
+        .alert-info {
+            background-color: #d1ecf1;
+            color: #0c5460;
+        }
+        
+        table {
+            background-color: white;
+        }
+        
+        .table-striped tbody tr:nth-of-type(odd) {
+            background-color: #FFFEF7;
+        }
+        
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: relative;
+            }
+            .main-content {
+                margin-left: 0;
+            }
+        }
+    </style>
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    {% if current_user.is_authenticated %}
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <i class="fas fa-cloud"></i> Cloud Scheduler
+        </div>
+        <nav>
+            <a href="{{ url_for('home') }}" class="nav-link {% if request.endpoint == 'home' %}active{% endif %}">
+                <i class="fas fa-home"></i> Home
+            </a>
+            <a href="{{ url_for('eda') }}" class="nav-link {% if request.endpoint == 'eda' %}active{% endif %}">
+                <i class="fas fa-chart-bar"></i> EDA
+            </a>
+            <a href="{{ url_for('classification', target='job_priority') }}" class="nav-link {% if 'job_priority' in request.path %}active{% endif %}">
+                <i class="fas fa-tasks"></i> Job Priority
+            </a>
+            <a href="{{ url_for('classification', target='scheduler_type') }}" class="nav-link {% if 'scheduler_type' in request.path %}active{% endif %}">
+                <i class="fas fa-cogs"></i> Scheduler Type
+            </a>
+            <a href="{{ url_for('classification', target='resource_allocation') }}" class="nav-link {% if 'resource_allocation' in request.path %}active{% endif %}">
+                <i class="fas fa-server"></i> Resource Allocation
+            </a>
+            <a href="{{ url_for('performance') }}" class="nav-link {% if request.endpoint == 'performance' %}active{% endif %}">
+                <i class="fas fa-chart-line"></i> Performance
+            </a>
+            <a href="{{ url_for('prediction') }}" class="nav-link {% if request.endpoint == 'prediction' %}active{% endif %}">
+                <i class="fas fa-calculator"></i> Prediction
+            </a>
+            <a href="{{ url_for('history') }}" class="nav-link {% if request.endpoint == 'history' %}active{% endif %}">
+                <i class="fas fa-history"></i> History
+            </a>
+            <hr style="border-color: var(--accent-gold);">
+            <a href="{{ url_for('retrain') }}" class="nav-link {% if request.endpoint == 'retrain' %}active{% endif %}">
+                <i class="fas fa-sync-alt"></i> Retrain Models
+            </a>
+            
+            {% if current_user.is_admin %}
+            <hr style="border-color: var(--accent-gold);">
+            <a href="{{ url_for('admin') }}" class="nav-link {% if request.endpoint == 'admin' %}active{% endif %}">
+                <i class="fas fa-user-shield"></i> Admin Dashboard
+            </a>
+            {% endif %}
+            <hr style="border-color: var(--accent-gold);">
+            <a href="{{ url_for('logout') }}" class="nav-link">
+                <i class="fas fa-sign-out-alt"></i> Logout
+            </a>
+        </nav>
+        <div class="mt-4 p-3" style="background-color: rgba(255, 215, 0, 0.2); border-radius: 8px; font-size: 0.85rem;">
+            <strong><i class="fas fa-user"></i> {{ current_user.name }}</strong><br>
+            <small>{{ current_user.email }}</small>
+        </div>
+    </div>
+    {% endif %}
+    
+    <div class="{% if current_user.is_authenticated %}main-content{% else %}container mt-5{% endif %}">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+        
+        {% block content %}{% endblock %}
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

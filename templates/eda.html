@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+
+{% block title %}EDA - Cloud Workload Scheduler{% endblock %}
+
+{% block content %}
+<div class="mb-4">
+    <h1 class="display-5 fw-bold"><i class="fas fa-chart-bar"></i> Exploratory Data Analysis</h1>
+    <p class="lead">Comprehensive analysis of cloud workload dataset</p>
+</div>
+
+<div class="row g-4">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="fas fa-database"></i> Data Source Distribution</h5>
+            </div>
+            <div class="card-body">
+                <img src="data:image/png;base64,{{ plots.data_source_dist }}" class="img-fluid" alt="Data Source Distribution">
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="fas fa-tasks"></i> Job Priority Distribution</h5>
+            </div>
+            <div class="card-body">
+                <img src="data:image/png;base64,{{ plots.job_priority_dist }}" class="img-fluid" alt="Job Priority Distribution">
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card mt-4">
+    <div class="card-header">
+        <h5 class="mb-0"><i class="fas fa-link"></i> Feature Correlation Matrix</h5>
+    </div>
+    <div class="card-body">
+        <img src="data:image/png;base64,{{ plots.correlation }}" class="img-fluid" alt="Correlation Matrix">
+    </div>
+</div>
+
+<div class="card mt-4">
+    <div class="card-header">
+        <h5 class="mb-0"><i class="fas fa-chart-area"></i> Feature Distributions</h5>
+    </div>
+    <div class="card-body">
+        <img src="data:image/png;base64,{{ plots.distributions }}" class="img-fluid" alt="Feature Distributions">
+    </div>
+</div>
+
+<div class="card mt-4">
+    <div class="card-header">
+        <h5 class="mb-0"><i class="fas fa-table"></i> Statistical Summary</h5>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            {{ summary_stats | safe }}
+        </div>
+    </div>
+</div>
+{% endblock %}
