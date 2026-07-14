@@ -76,7 +76,7 @@ CRNGRIM/
 ---
 ## 👨‍💻 Author
 
-**Sheikh Mohammad Abubakar Siddiq**
+**Shaik Mohammad Abubakar Siddiq**
 
 - GitHub: https://github.com/siddiq06
 - LinkedIn: https://linkedin.com/in/siddiqsk06
