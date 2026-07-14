@@ -74,13 +74,6 @@ CRNGRIM/
 ```
 
 ---
-
-## 📊 Dataset
-
-The project uses a dataset for intelligent task scheduling. Due to its large size, the complete dataset is not included in this repository.
-
----
-
 ## 👨‍💻 Author
 
 **Sheikh Mohammad Abubakar Siddiq**
